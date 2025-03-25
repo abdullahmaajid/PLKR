@@ -45,4 +45,7 @@ router.get('/admin/materi/section/delete/:sectionId', authMiddleware, materiCont
 router.get('/materi', materiController.userListMateri);
 router.get('/materi/:id', materiController.userDetailMateri);
 
+// Route untuk update urutan section (admin)
+router.post('/admin/materi/section/updateOrder', authMiddleware, materiController.updateSectionOrder);
+
 module.exports = router;

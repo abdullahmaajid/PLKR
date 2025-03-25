@@ -4,9 +4,25 @@
   <meta charset="UTF-8">
   <title><%= title %> - Admin</title>
   <style>
-    /* Style sederhana */
-    .section { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    /* Style sederhana untuk section yang di-sortable */
+    #sortable-sections {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+    #sortable-sections li {
+      margin: 0 0 5px 0;
+      padding: 10px;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      cursor: move;
+    }
   </style>
+  <!-- Sertakan jQuery dan jQuery UI -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 </head>
 <body>
   <h1>Edit Materi - Admin</h1>
@@ -25,20 +41,60 @@
   
   <h2>Sections</h2>
   <a href="/admin/materi/<%= module.id %>/section/create">Tambah Section</a>
+  
   <% if (sections && sections.length > 0) { %>
-    <% sections.forEach(function(section) { %>
-      <div class="section">
-        <h3><%= section.section_title %> (Order: <%= section.section_order %>)</h3>
-        <p><%= section.section_content %></p>
-        <a href="/admin/materi/section/edit/<%= section.id %>">Edit</a>
-        <a href="/admin/materi/section/delete/<%= section.id %>" onclick="return confirm('Yakin hapus section ini?')">Hapus</a>
-      </div>
-    <% }); %>
+    <ul id="sortable-sections">
+      <% sections.forEach(function(section) { %>
+        <li class="ui-state-default" data-id="<%= section.id %>">
+          <strong><%= section.section_title %></strong> (Order: <%= section.section_order %>)
+          <div>
+            <a href="/admin/materi/section/edit/<%= section.id %>">Edit</a>
+            <a href="/admin/materi/section/delete/<%= section.id %>" onclick="return confirm('Yakin hapus section ini?')">Hapus</a>
+          </div>
+        </li>
+      <% }); %>
+    </ul>
+    <button id="save-order">Simpan Urutan</button>
   <% } else { %>
     <p>Tidak ada section.</p>
   <% } %>
   
   <br>
   <a href="/admin/materi">Kembali ke Daftar Materi</a>
+  
+  <script>
+    $(function() {
+      $("#sortable-sections").sortable();
+      $("#sortable-sections").disableSelection();
+  
+      $("#save-order").click(function() {
+        // Ambil array ID section berdasarkan urutan baru
+        var order = [];
+        $("#sortable-sections li").each(function(){
+          order.push($(this).data("id"));
+        });
+        console.log("New order:", order); // Debug log di browser
+  
+        $.ajax({
+          url: '/admin/materi/section/updateOrder',
+          method: 'POST',
+          data: { order: order },
+          success: function(response) {
+            if (response.success) {
+              alert("Urutan section berhasil diupdate!");
+              location.reload();
+            } else {
+              alert("Gagal mengupdate urutan section: " + response.message);
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error("AJAX error:", status, error);
+            alert("Terjadi kesalahan saat mengupdate urutan section.");
+          }
+        });
+      });
+    });
+  </script>
+  
 </body>
 </html>

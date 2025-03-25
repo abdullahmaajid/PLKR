@@ -253,3 +253,34 @@ exports.deleteSection = async (req, res) => {
     res.send('Terjadi kesalahan saat menghapus section.');
   }
 };
+
+// Fungsi untuk update urutan section
+exports.updateSectionOrder = async (req, res) => {
+    console.log("Update Section Order - req.body:", req.body);
+    
+    // Cek apakah req.body.order ada, jika tidak, gunakan req.body['order[]']
+    let order = req.body.order || req.body['order[]'];
+    
+    if (!order || !Array.isArray(order)) {
+      return res.status(400).json({ success: false, message: "Data 'order' harus berupa array." });
+    }
+    
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+      // Update setiap section berdasarkan posisi baru (i+1)
+      for (let i = 0; i < order.length; i++) {
+        console.log(`Updating section with id ${order[i]} to order ${i + 1}`);
+        await connection.execute(
+          'UPDATE module_sections SET section_order = ? WHERE id = ?',
+          [i + 1, order[i]]
+        );
+      }
+      await connection.end();
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating section order:", error);
+      res.status(500).json({ success: false, message: 'Error updating order' });
+    }
+  };
+  
+  
