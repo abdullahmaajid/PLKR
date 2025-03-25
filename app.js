@@ -17,6 +17,13 @@ app.use(session({
   saveUninitialized: true
 }));
 
+// Tambahkan di bawah session middleware
+app.use((req, res, next) => {
+  res.locals.flash = req.session.flash;
+  delete req.session.flash;
+  next();
+});
+
 // Middleware untuk parsing request body
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

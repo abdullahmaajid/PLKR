@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <style>
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .module-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .module-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .module-title {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .quiz-count {
+      color: #666;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <%- include('../../partials/sidebar') %>
+  
+  <div class="container">
+    <h1><%= title %></h1>
+    
+    <div class="module-grid">
+      <% modules.forEach(module => { %>
+        <div class="module-card" 
+             onclick="window.location.href='/admin/quiz/module/<%= module.id %>'">
+          <div class="module-title"><%= module.title %></div>
+          <div class="quiz-count">
+            <%= module.total_questions %> Pertanyaan
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>

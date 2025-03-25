@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <style>
+    .question-list {
+      margin-top: 20px;
+    }
+    .question-item {
+      padding: 15px;
+      border: 1px solid #eee;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+    .question-actions {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <%- include('../../partials/sidebar') %>
+  
+  <div class="container">
+    <h1>Kelola Kuis: <%= module.title %></h1>
+    <a href="/admin/quiz/create?moduleId=<%= module.id %>" class="btn">
+      + Tambah Pertanyaan
+    </a>
+    
+    <div class="question-list">
+      <% questions.forEach(question => { %>
+        <div class="question-item">
+          <div class="question-text"><%= question.question %></div>
+          <div class="question-meta">
+            <span>Kesulitan: <%= question.difficulty %></span>
+            <span>Jawaban Benar: <%= question.correct_answer.toUpperCase() %></span>
+          </div>
+          <div class="question-actions">
+            <a href="/admin/quiz/edit/<%= question.id %>" class="btn-edit">Edit</a>
+            <a href="/admin/quiz/delete/<%= question.id %>" 
+               class="btn-delete"
+               onclick="return confirm('Hapus pertanyaan ini?')">Hapus</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>

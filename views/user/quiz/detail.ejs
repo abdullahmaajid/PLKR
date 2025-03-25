@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Detail Quiz - User</title>
+  <style>
+    .quiz {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    .quiz h3 {
+      margin-top: 0;
+    }
+    .quiz p {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz">
+    <h1>Detail Quiz</h1>
+    <h3>Pertanyaan:</h3>
+    <p><%= quiz.question %></p>
+    <h4>Opsi Jawaban:</h4>
+    <ul>
+      <li>A. <%= quiz.option_a %></li>
+      <li>B. <%= quiz.option_b %></li>
+      <li>C. <%= quiz.option_c %></li>
+      <li>D. <%= quiz.option_d %></li>
+    </ul>
+    <p><strong>Jawaban Benar:</strong> <%= quiz.correct_answer %></p>
+  </div>
+  <br>
+  <a href="/quiz/<%= moduleId %>">Kembali ke Daftar Quiz</a>
+</body>
+</html>

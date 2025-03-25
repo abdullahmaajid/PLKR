@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <style>
+    .quiz-form {
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input[type="text"],
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <%- include('../../partials/sidebar') %>
+  
+  <div class="container">
+    <h1>Buat Pertanyaan Baru</h1>
+    <h3>Modul: <%= module.title %></h3>
+    
+    <form class="quiz-form" method="POST" action="/admin/quiz/create">
+      <input type="hidden" name="module_id" value="<%= module.id %>">
+      
+      <div class="form-group">
+        <label>Pertanyaan:</label>
+        <textarea name="question" rows="3" required></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Opsi Jawaban:</label>
+        <input type="text" name="option_a" placeholder="Opsi A" required>
+        <input type="text" name="option_b" placeholder="Opsi B" required>
+        <input type="text" name="option_c" placeholder="Opsi C" required>
+        <input type="text" name="option_d" placeholder="Opsi D" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Jawaban Benar:</label>
+        <select name="correct_answer" required>
+          <option value="a">A</option>
+          <option value="b">B</option>
+          <option value="c">C</option>
+          <option value="d">D</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Tingkat Kesulitan:</label>
+        <select name="difficulty" required>
+          <option value="easy">Mudah</option>
+          <option value="medium">Sedang</option>
+          <option value="hard">Sulit</option>
+        </select>
+      </div>
+      
+      <button type="submit">Simpan Pertanyaan</button>
+      <a href="/admin/quiz/module/<%= module.id %>" class="btn-cancel">Batal</a>
+    </form>
+  </div>
+</body>
+</html>

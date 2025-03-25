@@ -1,10 +1,10 @@
-// routes/index.js
 const express = require('express');
 const router = express.Router();
 
 const homeController = require('../controllers/homeController');
 const authController = require('../controllers/authController');
 const materiController = require('../controllers/materiController');
+const quizController = require('../controllers/quizController'); // Tambahkan ini
 const authMiddleware = require('../middleware/authMiddleware');
 
 // Landing page
@@ -32,18 +32,27 @@ router.post('/admin/materi/edit/:id', authMiddleware, materiController.updateMat
 router.get('/admin/materi/delete/:id', authMiddleware, materiController.deleteMateri);
 
 // CRUD Module Sections (admin)
-// Menambah section untuk suatu modul
 router.get('/admin/materi/:moduleId/section/create', authMiddleware, materiController.createSectionPage);
 router.post('/admin/materi/:moduleId/section/create', authMiddleware, materiController.createSection);
-// Mengedit section
 router.get('/admin/materi/section/edit/:sectionId', authMiddleware, materiController.editSectionPage);
 router.post('/admin/materi/section/edit/:sectionId', authMiddleware, materiController.updateSection);
-// Menghapus section
 router.get('/admin/materi/section/delete/:sectionId', authMiddleware, materiController.deleteSection);
 
-// Untuk user: daftar dan detail materi
+// QUIZ ROUTES
+router.get('/admin/quiz', authMiddleware, quizController.adminListModules);
+router.get('/admin/quiz/module/:moduleId', authMiddleware, quizController.adminModuleDetail);
+router.get('/admin/quiz/create', authMiddleware, quizController.adminCreateQuestionPage);
+router.post('/admin/quiz/create', authMiddleware, quizController.adminCreateQuestion);
+router.get('/admin/quiz/edit/:questionId', authMiddleware, quizController.adminEditQuestionPage);
+router.post('/admin/quiz/update/:questionId', authMiddleware, quizController.adminUpdateQuestion);
+router.get('/admin/quiz/delete/:questionId', authMiddleware, quizController.adminDeleteQuestion);
+
+// Route untuk user: Materi
 router.get('/materi', materiController.userListMateri);
 router.get('/materi/:id', materiController.userDetailMateri);
+
+
+
 
 // Route untuk update urutan section (admin)
 router.post('/admin/materi/section/updateOrder', authMiddleware, materiController.updateSectionOrder);

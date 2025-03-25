@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Daftar Quiz - User</title>
+  <style>
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .card {
+      border: 1px solid #ccc;
+      padding: 20px;
+      width: calc(33% - 20px);
+      box-sizing: border-box;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    .card h3 {
+      margin-top: 0;
+    }
+    .card a {
+      text-decoration: none;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Daftar Quiz</h1>
+  <div class="card-container">
+    <% quizzes.forEach(function(quiz) { %>
+      <div class="card">
+        <h3>Quiz ID: <%= quiz.id %></h3>
+        <p><strong>Pertanyaan:</strong> <%= quiz.question.substring(0, 100) %>...</p>
+        <a href="/quiz/<%= moduleId %>/detail/<%= quiz.id %>">Lihat Detail</a>
+      </div>
+    <% }); %>
+  </div>
+  <br>
+  <a href="/">Kembali ke Landing Page</a>
+</body>
+</html>
