@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title><%= module.title %></title>
+  <style>
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .section {
+      margin-top: 20px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <h1><%= module.title %></h1>
+    <p><strong>Deskripsi:</strong> <%= module.description %></p>
+    <hr>
+    <div>
+      <h3>Konten Materi:</h3>
+      <div>
+        <!-- Tampilkan konten utama dari modul -->
+        <%= module.content %>
+      </div>
+    </div>
+    <hr>
+    <div>
+      <h3>Bagian Materi (Sections):</h3>
+      <% if (sections && sections.length > 0) { %>
+        <% sections.forEach(function(section) { %>
+          <div class="section">
+            <h4><%= section.section_title %> (Order: <%= section.section_order %>)</h4>
+            <p><%= section.section_content %></p>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>Tidak ada bagian tambahan.</p>
+      <% } %>
+    </div>
+    <br>
+    <a href="/materi">Kembali ke Daftar Materi</a>
+  </div>
+</body>
+</html>

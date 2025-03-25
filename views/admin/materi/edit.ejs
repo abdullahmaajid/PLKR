@@ -2,22 +2,42 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title><%= title %></title>
+  <title><%= title %> - Admin</title>
+  <style>
+    /* Style sederhana */
+    .section { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+  </style>
 </head>
 <body>
-  <h1>Edit Materi Keuangan</h1>
+  <h1>Edit Materi - Admin</h1>
   <form method="POST" action="/admin/materi/edit/<%= module.id %>">
     <label>Judul:</label><br>
     <input type="text" name="title" value="<%= module.title %>" required><br><br>
-
+    
     <label>Deskripsi:</label><br>
     <textarea name="description" required><%= module.description %></textarea><br><br>
-
-    <label>Konten:</label><br>
-    <textarea name="content" required><%= module.content %></textarea><br><br>
-
-    <button type="submit">Update</button>
+    
+    <label>Konten Utama:</label><br>
+    <textarea name="content" required rows="10" cols="50"><%= module.content %></textarea><br><br>
+    
+    <button type="submit">Update Materi</button>
   </form>
+  
+  <h2>Sections</h2>
+  <a href="/admin/materi/<%= module.id %>/section/create">Tambah Section</a>
+  <% if (sections && sections.length > 0) { %>
+    <% sections.forEach(function(section) { %>
+      <div class="section">
+        <h3><%= section.section_title %> (Order: <%= section.section_order %>)</h3>
+        <p><%= section.section_content %></p>
+        <a href="/admin/materi/section/edit/<%= section.id %>">Edit</a>
+        <a href="/admin/materi/section/delete/<%= section.id %>" onclick="return confirm('Yakin hapus section ini?')">Hapus</a>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <p>Tidak ada section.</p>
+  <% } %>
+  
   <br>
   <a href="/admin/materi">Kembali ke Daftar Materi</a>
 </body>

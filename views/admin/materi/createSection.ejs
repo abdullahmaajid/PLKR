@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %> - Tambah Section</title>
+</head>
+<body>
+  <h1>Tambah Section untuk Modul ID: <%= moduleId %></h1>
+  <form method="POST" action="/admin/materi/<%= moduleId %>/section/create">
+    <label>Urutan Section (Order):</label><br>
+    <input type="number" name="section_order" required><br><br>
+    
+    <label>Judul Section:</label><br>
+    <input type="text" name="section_title" required><br><br>
+    
+    <label>Konten Section:</label><br>
+    <textarea name="section_content" required rows="8" cols="50"></textarea><br><br>
+    
+    <button type="submit">Simpan Section</button>
+  </form>
+  <br>
+  <a href="javascript:history.back()">Kembali</a>
+</body>
+</html>

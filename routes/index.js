@@ -31,4 +31,18 @@ router.get('/admin/materi/edit/:id', authMiddleware, materiController.editMateri
 router.post('/admin/materi/edit/:id', authMiddleware, materiController.updateMateri);
 router.get('/admin/materi/delete/:id', authMiddleware, materiController.deleteMateri);
 
+// CRUD Module Sections (admin)
+// Menambah section untuk suatu modul
+router.get('/admin/materi/:moduleId/section/create', authMiddleware, materiController.createSectionPage);
+router.post('/admin/materi/:moduleId/section/create', authMiddleware, materiController.createSection);
+// Mengedit section
+router.get('/admin/materi/section/edit/:sectionId', authMiddleware, materiController.editSectionPage);
+router.post('/admin/materi/section/edit/:sectionId', authMiddleware, materiController.updateSection);
+// Menghapus section
+router.get('/admin/materi/section/delete/:sectionId', authMiddleware, materiController.deleteSection);
+
+// Untuk user: daftar dan detail materi
+router.get('/materi', materiController.userListMateri);
+router.get('/materi/:id', materiController.userDetailMateri);
+
 module.exports = router;
