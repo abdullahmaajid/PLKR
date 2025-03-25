@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+</head>
+<body>
+  <h1>Edit Materi Keuangan</h1>
+  <form method="POST" action="/admin/materi/edit/<%= module.id %>">
+    <label>Judul:</label><br>
+    <input type="text" name="title" value="<%= module.title %>" required><br><br>
+
+    <label>Deskripsi:</label><br>
+    <textarea name="description" required><%= module.description %></textarea><br><br>
+
+    <label>Konten:</label><br>
+    <textarea name="content" required><%= module.content %></textarea><br><br>
+
+    <button type="submit">Update</button>
+  </form>
+  <br>
+  <a href="/admin/materi">Kembali ke Daftar Materi</a>
+</body>
+</html>

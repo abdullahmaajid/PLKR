@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+</head>
+<body>
+  <h1>Tambah Materi Keuangan</h1>
+  <form method="POST" action="/admin/materi/create">
+    <label>Judul:</label><br>
+    <input type="text" name="title" required><br><br>
+
+    <label>Deskripsi:</label><br>
+    <textarea name="description" required></textarea><br><br>
+
+    <label>Konten:</label><br>
+    <textarea name="content" required></textarea><br><br>
+
+    <button type="submit">Simpan</button>
+  </form>
+  <br>
+  <a href="/admin/materi">Kembali ke Daftar Materi</a>
+</body>
+</html>

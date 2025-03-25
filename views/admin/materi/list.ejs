@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    a {
+      text-decoration: none;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Daftar Materi Keuangan</h1>
+  <a href="/admin/materi/create">Tambah Materi</a>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Judul</th>
+        <th>Deskripsi</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% modules.forEach(function(module) { %>
+      <tr>
+        <td><%= module.id %></td>
+        <td><%= module.title %></td>
+        <td><%= module.description %></td>
+        <td>
+          <a href="/admin/materi/edit/<%= module.id %>">Edit</a>
+          <a href="/admin/materi/delete/<%= module.id %>" onclick="return confirm('Yakin hapus materi ini?')">Hapus</a>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <br>
+  <a href="/admin-dashboard">Kembali ke Dashboard Admin</a>
+</body>
+</html>

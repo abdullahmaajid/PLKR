@@ -1,0 +1,19 @@
+<aside class="sidebar">
+    <ul>
+      <% if (user && user.role === 'admin') { %>
+        <!-- Sidebar untuk Admin -->
+        <li><a href="/admin-dashboard">Dashboard Admin</a></li>
+        <li><a href="/admin/materi">CRUD Materi Keuangan</a></li>
+        <li><a href="/admin/tantangan">CRUD Tantangan</a></li>
+        <li><a href="/admin/batch">CRUD Batch</a></li>
+      <% } else { %>
+        <!-- Sidebar untuk User -->
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/materi">Materi Keuangan</a></li>
+        <li><a href="/tantangan">Tantangan & Quiz</a></li>
+        <li><a href="/forum">Forum Diskusi</a></li>
+        <li><a href="/simulasi">Simulasi Keuangan</a></li>
+      <% } %>
+    </ul>
+  </aside>
+  
