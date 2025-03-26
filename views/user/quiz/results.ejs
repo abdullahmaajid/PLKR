@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <style>
+    .results-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .score-box {
+      text-align: center;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    .score-value {
+      font-size: 2.5em;
+      color: #2196F3;
+      font-weight: bold;
+    }
+    .answer-item {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+    }
+    .correct-answer { background: #e8f5e9; }
+    .wrong-answer { background: #ffebee; }
+    .explanation {
+      margin-top: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <%- include('../../partials/sidebar') %>
+  
+  <div class="results-container">
+    <div class="score-box">
+      <h2>Skor Akhir</h2>
+      <div class="score-value"><%= attempt.score %>%</div>
+      <p>Benar: <%= attempt.score / 100 * answers.length %> dari <%= answers.length %> pertanyaan</p>
+    </div>
+    
+    <% answers.forEach((answer, index) => { %>
+      <div class="answer-item <%= answer.selected_answer === answer.correct_answer ? 'correct-answer' : 'wrong-answer' %>">
+        <div class="question">
+          <strong>Pertanyaan <%= index + 1 %>:</strong><br>
+          <%= answer.question %>
+        </div>
+        <div class="user-answer">
+          Jawaban Anda: <%= answer.selected_answer.toUpperCase() %> 
+          <% if (answer.selected_answer !== answer.correct_answer) { %>
+            <span style="color: #d32f2f">(Salah)</span>
+          <% } else { %>
+            <span style="color: #388e3c">(Benar)</span>
+          <% } %>
+        </div>
+        <div class="correct-answer">
+          Jawaban Benar: <%= answer.correct_answer.toUpperCase() %>
+        </div>
+        <% if (answer.explanation) { %>
+          <div class="explanation">
+            <strong>Penjelasan:</strong><br>
+            <%= answer.explanation %>
+          </div>
+        <% } %>
+      </div>
+    <% }) %>
+    
+    <div style="text-align: center; margin-top: 30px;">
+      <a href="/quiz" class="btn-back">Kembali ke Daftar Kuis</a>
+    </div>
+  </div>
+</body>
+</html>

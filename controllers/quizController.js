@@ -216,3 +216,187 @@ exports.adminDeleteQuestion = async (req, res) => {
     res.send('Gagal menghapus pertanyaan');
   }
 };
+
+
+// controllers/quizController.js
+
+// USER: List Modul dengan Kuis
+exports.userListQuizzes = async (req, res) => {
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+      
+      const [modules] = await connection.execute(`
+        SELECT 
+          m.id,
+          m.title,
+          m.description,
+          COUNT(qq.id) AS total_questions
+        FROM modules m
+        INNER JOIN quiz_questions qq ON m.id = qq.module_id
+        GROUP BY m.id
+        HAVING total_questions > 0
+        ORDER BY m.created_at DESC
+      `);
+      
+      await connection.end();
+      
+      res.render('user/quiz/list', {
+        title: 'Daftar Kuis',
+        modules,
+        user: req.session.user
+      });
+    } catch (error) {
+      console.error(error);
+      res.send('Gagal memuat daftar kuis');
+    }
+  };
+  
+  // USER: Halaman Mulai Kuis
+  exports.userAttemptQuiz = async (req, res) => {
+    const { moduleId } = req.params;
+    
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+      
+      // Ambil pertanyaan acak
+      const [questions] = await connection.execute(
+        `SELECT * FROM quiz_questions 
+        WHERE module_id = ?
+        ORDER BY RAND() LIMIT 10`, // Ambil 10 soal acak
+        [moduleId]
+      );
+      
+      // Ambil info modul
+      const [module] = await connection.execute(
+        'SELECT title FROM modules WHERE id = ?',
+        [moduleId]
+      );
+      
+      await connection.end();
+      
+      res.render('user/quiz/attempt', {
+        title: 'Mulai Kuis',
+        module: module[0],
+        questions,
+        user: req.session.user
+      });
+    } catch (error) {
+      console.error(error);
+      res.send('Gagal memulai kuis');
+    }
+  };
+  
+  // USER: Proses Jawaban Kuis
+  exports.userSubmitQuiz = async (req, res) => {
+    const { module_id, answers } = req.body;
+    const userId = req.session.user.id;
+    
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+       // Validasi module_id
+    const [moduleCheck] = await connection.execute(
+        'SELECT id FROM modules WHERE id = ?',
+        [module_id]
+      );
+  
+      if (moduleCheck.length === 0) {
+        await connection.end();
+        return res.send('Modul tidak valid!');
+      }
+      // Buat attempt baru
+      const [attempt] = await connection.execute(
+        `INSERT INTO quiz_attempts 
+        (user_id, module_id, score)
+        VALUES (?, ?, 0)`,
+        [userId, module_id]
+      );
+      const attemptId = attempt.insertId;
+      
+      // Proses jawaban
+      let correctCount = 0;
+      for (const questionId in answers) {
+        const selectedAnswer = answers[questionId];
+        
+        // Cek jawaban benar
+        const [question] = await connection.execute(
+          'SELECT correct_answer FROM quiz_questions WHERE id = ?',
+          [questionId]
+        );
+        
+        const isCorrect = question[0].correct_answer === selectedAnswer;
+        if (isCorrect) correctCount++;
+        
+        // Simpan jawaban user
+        await connection.execute(
+          `INSERT INTO user_quiz_answers
+          (user_id, attempt_id, question_id, selected_answer)
+          VALUES (?, ?, ?, ?)`,
+          [userId, attemptId, questionId, selectedAnswer]
+        );
+      }
+      
+      // Hitung skor
+      const totalQuestions = Object.keys(answers).length;
+      const score = totalQuestions > 0 
+        ? Math.round((correctCount / totalQuestions) * 100)
+        : 0;
+      
+      // Update skor attempt
+      await connection.execute(
+        'UPDATE quiz_attempts SET score = ? WHERE attempt_id = ?',
+        [score, attemptId]
+      );
+      
+      await connection.end();
+      
+      res.redirect(`/quiz/results/${attemptId}`);
+    } catch (error) {
+      console.error(error);
+      res.send('Gagal menyimpan hasil kuis');
+    }
+  };
+  
+  // USER: Hasil Kuis
+  exports.userQuizResults = async (req, res) => {
+    const { attemptId } = req.params;
+    
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+      
+      // Ambil data attempt
+      const [attempt] = await connection.execute(`
+        SELECT 
+          qa.*, 
+          m.title AS module_title,
+          u.username
+        FROM quiz_attempts qa
+        JOIN modules m ON qa.module_id = m.id
+        JOIN users u ON qa.user_id = u.id
+        WHERE attempt_id = ?
+      `, [attemptId]);
+      
+      // Ambil jawaban user
+      const [answers] = await connection.execute(`
+        SELECT 
+          uqa.*,
+          qq.question,
+          qq.correct_answer,
+          qq.explanation
+        FROM user_quiz_answers uqa
+        JOIN quiz_questions qq ON uqa.question_id = qq.id
+        WHERE attempt_id = ?
+      `, [attemptId]);
+      
+      await connection.end();
+      
+      res.render('user/quiz/results', {
+        title: 'Hasil Kuis',
+        attempt: attempt[0],
+        answers,
+        user: req.session.user
+      });
+    } catch (error) {
+      console.error(error);
+      res.send('Gagal memuat hasil kuis');
+    }
+  };

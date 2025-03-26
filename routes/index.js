@@ -38,6 +38,10 @@ router.get('/admin/materi/section/edit/:sectionId', authMiddleware, materiContro
 router.post('/admin/materi/section/edit/:sectionId', authMiddleware, materiController.updateSection);
 router.get('/admin/materi/section/delete/:sectionId', authMiddleware, materiController.deleteSection);
 
+// Route untuk user: Materi
+router.get('/materi', materiController.userListMateri);
+router.get('/materi/:id', materiController.userDetailMateri);
+
 // QUIZ ROUTES
 router.get('/admin/quiz', authMiddleware, quizController.adminListModules);
 router.get('/admin/quiz/module/:moduleId', authMiddleware, quizController.adminModuleDetail);
@@ -47,11 +51,23 @@ router.get('/admin/quiz/edit/:questionId', authMiddleware, quizController.adminE
 router.post('/admin/quiz/update/:questionId', authMiddleware, quizController.adminUpdateQuestion);
 router.get('/admin/quiz/delete/:questionId', authMiddleware, quizController.adminDeleteQuestion);
 
-// Route untuk user: Materi
-router.get('/materi', materiController.userListMateri);
-router.get('/materi/:id', materiController.userDetailMateri);
+// routes/index.js
+
+// User Quiz Routes
+router.get('/quiz', authMiddleware, quizController.userListQuizzes);
+router.get('/quiz/attempt/:moduleId', authMiddleware, quizController.userAttemptQuiz);
+router.post('/quiz/submit', authMiddleware, quizController.userSubmitQuiz);
+router.get('/quiz/results/:attemptId', authMiddleware, quizController.userQuizResults);
 
 
+
+// Di routes/index.js
+router.post('/quiz/submit', authMiddleware, (req, res) => {
+    quizController.userSubmitQuiz(req, res).catch(error => {
+      console.error('Error submitting quiz:', error);
+      res.status(500).send('Terjadi kesalahan sistem');
+    });
+  });
 
 
 // Route untuk update urutan section (admin)
